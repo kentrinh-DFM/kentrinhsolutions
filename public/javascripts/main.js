@@ -40,7 +40,6 @@ app.controller('myCtrl', function($scope, $http, $interval) {
     }, function errorCallback(response) {
 
     });
-
     // $http({
     //     method: 'GET',
     //     url: '/manifest/date'
