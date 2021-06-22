@@ -2,6 +2,9 @@
 <html>
 
 <head>
+    <title>IoT Asset Monitoring</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.js"></script>
@@ -28,8 +31,14 @@
     </div>
 </div>
 </body> -->
-
 <body>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">DeltaFM</a>
+            </div>
+        </div>
+    </nav>
     <div class="container">
         <div ng-app="myApp" ng-controller="myCtrl">
             <!--             <div class="col-md-6">
@@ -38,30 +47,27 @@
                 </p>
             </div> -->
             <div class="form-row">
-                <form name="myForm" ng-show="last_job_status=='Completed'">
+                <form name="myForm">
+                    <!-- <form name="myForm" ng-show="last_job_status=='Completed'"> -->
+                    <h3>IoT Asset Monitoring</h3>
+                    <p>Input token to refresh data</p>
                     <div class="col-md-3 mb-3">
-                        <label for="validationServer05">Token</label>
-                        <input type="number" class="form-control is-invalid" id="validationServer05" placeholder="Token" ng-model="token" required>
-                        <div class="invalid-feedback">
+                        <label for="validationServer05"></label>
+                        <input type="text" class="form-control is-invalid" id="validationServer05" placeholder="Input Token" ng-model="token" required>
+                        <!--                         <div class="invalid-feedback">
                             Get token <a href="https://tableautest.compass-group.com.au/#/views/FlightManifest/FlightManifest">here</a>
-                        </div>
-                        <div role="alert">
-                            <span class="error" ng-show="myForm.input.$error.required">
-                                Required!</span>
-                            <span class="error" ng-show="myForm.input.$error.number">
-                                Not valid number!</span>
-                        </div>
+                        </div> -->
                     </div>
-                    <div class="col-md-3 mb-3">
+                    <!--                     <div class="col-md-3 mb-3">
                         <label for="validationServer03">Date</label>
                         <input type="date" class="form-control" uib-datepicker-popup ng-model="dt" is-open="popup2.opened" min-date="minDate" max-date="maxDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
-                    </div>
+                    </div> -->
                     <div class="col-md-3 mb-3">
                         <!-- <label for="validationServer03"></label> -->
-                        <button type="submit" class="btn btn-primary" ng-click="chooseDate()" id="btnClear">Submit</button> 
+                        <button type="submit" class="btn btn-primary" ng-click="chooseDate()" id="btnClear">Submit</button>
                     </div>
                 </form>
-                <p ng-show="last_job_status !='Completed'" id="job_status"><img src="https://media.giphy.com/media/xT39D3pHl63aiQh2De/giphy.gif" width="20%" height="20%"> Job Status: {{last_job_status}}</p>
+                <p ng-show="last_job_status !='Completed'" id="job_status">Job Status: {{last_job_status}}<img src="https://cdn.dribbble.com/users/563824/screenshots/3633228/untitled-5.gif" width="20%" height="20%"></p>
             </div>
         </div>
     </div>
