@@ -53,38 +53,8 @@ router.post('/', function(req, res) {
                 // Authorize a client with credentials, then call the Google Sheets API.
                 authorize(JSON.parse(content), listMajors);
 
-                
-                request.post({
-                    headers: { 'content-type': 'application/x-www-form-urlencoded' },
-                    url: 'https://iam.ng.bluemix.net/identity/token',
-                    body: api_token
-                }, function(error, response, body) {
-                    token = JSON.parse(body)
-                    // console.log(token.access_token);
-                    var Authorization = "Bearer " + token.access_token
 
-                    j_data = JSON.stringify({
-                        "job_run": {
-                            "configuration": {
 
-                            }
-                        }
-                    })
-
-                    request.post({
-                        headers: { "Content-Type": "application/json", "Authorization": Authorization },
-                        url: s_url,
-                        body: j_data
-                    }, function(error, response, body) {
-
-                        // res.send('A job is run')
-                        message = JSON.parse(body)
-                        console.log(message.metadata)
-                        return ResponseService.json(201, res, message)
-
-                    });
-
-                });
             });
 
             /**
@@ -165,7 +135,7 @@ router.post('/', function(req, res) {
                         });
 
                         const csv = csvStringifier.stringifyRecords(records);
-                        // console.log(csv)
+                        console.log(csv)
                         const params = {
                             Bucket: process.env.AWS_BUCKET, // pass your bucket name
                             Key: `FM/IoT/AssetMonitoringList/AssetMonitoringList.csv`, // file will be saved as testBucket/contacts.csv
@@ -182,7 +152,40 @@ router.post('/', function(req, res) {
                                 // });
                                 // res.status(200).end();
                                 console.log("Successfully uploaded data to myBucket/myKey");
+                                request.post({
+                                    headers: { 'content-type': 'application/x-www-form-urlencoded' },
+                                    url: 'https://iam.ng.bluemix.net/identity/token',
+                                    body: api_token
+                                }, function(error, response, body) {
+                                    token = JSON.parse(body)
+                                    // console.log(token.access_token);
+                                    var Authorization = "Bearer " + token.access_token
+
+                                    j_data = JSON.stringify({
+                                        "job_run": {
+                                            "configuration": {
+
+                                            }
+                                        }
+                                    })
+
+                                    request.post({
+                                        headers: { "Content-Type": "application/json", "Authorization": Authorization },
+                                        url: s_url,
+                                        body: j_data
+                                    }, function(error, response, body) {
+
+                                        // res.send('A job is run')
+                                        message = JSON.parse(body)
+                                        console.log(message.metadata)
+                                        return response
+
+                                    });
+
+                                });
                             }
+
+
                         });
 
                         // console.log('Name, Major:');
