@@ -52,39 +52,8 @@ router.post('/', function(req, res) {
                 if (err) return console.log('Error loading client secret file:', err);
                 // Authorize a client with credentials, then call the Google Sheets API.
                 authorize(JSON.parse(content), listMajors);
-                setTimeout(function() {;
-                    request.post({
-                        headers: { 'content-type': 'application/x-www-form-urlencoded' },
-                        url: 'https://iam.ng.bluemix.net/identity/token',
-                        body: api_token
-                    }, function(error, response, body) {
-                        token = JSON.parse(body)
-                        // console.log(token.access_token);
-                        var Authorization = "Bearer " + token.access_token
 
-                        j_data = JSON.stringify({
-                            "job_run": {
-                                "configuration": {
 
-                                }
-                            }
-                        })
-
-                        request.post({
-                            headers: { "Content-Type": "application/json", "Authorization": Authorization },
-                            url: s_url,
-                            body: j_data
-                        }, function(error, response, body) {
-
-                            // res.send('A job is run')
-                            message = JSON.parse(body)
-                            console.log(message.metadata)
-                            return response
-
-                        });
-
-                    });
-                }, 5000)
 
             });
 
@@ -192,6 +161,40 @@ router.post('/', function(req, res) {
 
 
                         });
+
+                        setTimeout(function() {;
+                            request.post({
+                                headers: { 'content-type': 'application/x-www-form-urlencoded' },
+                                url: 'https://iam.ng.bluemix.net/identity/token',
+                                body: api_token
+                            }, function(error, response, body) {
+                                token = JSON.parse(body)
+                                // console.log(token.access_token);
+                                var Authorization = "Bearer " + token.access_token
+
+                                j_data = JSON.stringify({
+                                    "job_run": {
+                                        "configuration": {
+
+                                        }
+                                    }
+                                })
+
+                                request.post({
+                                    headers: { "Content-Type": "application/json", "Authorization": Authorization },
+                                    url: s_url,
+                                    body: j_data
+                                }, function(error, response, body) {
+
+                                    // res.send('A job is run')
+                                    message = JSON.parse(body)
+                                    console.log(message.metadata)
+                                    return response
+
+                                });
+
+                            });
+                        }, 5000)
 
                         // console.log('Name, Major:');
                         // Print columns A and E, which correspond to indices 0 and 4.
