@@ -53,8 +53,6 @@ router.post('/', function(req, res) {
                 // Authorize a client with credentials, then call the Google Sheets API.
                 authorize(JSON.parse(content), listMajors);
 
-
-
             });
 
             /**
@@ -146,12 +144,16 @@ router.post('/', function(req, res) {
 
                         s3.upload(params, function(s3Err, data) {
                             if (s3Err) throw s3Err;
-                            else {
-                                // return ResponseService.json(201, respnse, "File created successfully", {
-                                //     redirectUri: data.Location,
-                                // });
-                                // res.status(200).end();
-                                console.log("Successfully uploaded data to myBucket/myKey");
+                            // else {
+                            //     // return ResponseService.json(201, respnse, "File created successfully", {
+                            //     //     redirectUri: data.Location,
+                            //     // });
+                            //     // res.status(200).end();
+
+
+                            // }
+
+                            setTimeout(function() {;
                                 request.post({
                                     headers: { 'content-type': 'application/x-www-form-urlencoded' },
                                     url: 'https://iam.ng.bluemix.net/identity/token',
@@ -183,7 +185,9 @@ router.post('/', function(req, res) {
                                     });
 
                                 });
-                            }
+                            }, 5000)
+
+                            console.log("Successfully uploaded data to myBucket/myKey");
 
 
                         });
