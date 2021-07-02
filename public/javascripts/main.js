@@ -67,7 +67,6 @@ app.controller('myCtrl', function($scope, $http, $interval) {
     // });
 
     $scope.jobid = '';
-    $scope.success = '';
 
     $scope.chooseDate = function() {
 
@@ -89,7 +88,6 @@ app.controller('myCtrl', function($scope, $http, $interval) {
                 data: obj_send
             }).then(function successCallback(response) {
                 console.log(response)
-                $scope.success = response.status
             });
         }
 
