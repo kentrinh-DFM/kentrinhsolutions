@@ -53,6 +53,7 @@ router.post('/', function(req, res) {
                 // Authorize a client with credentials, then call the Google Sheets API.
                 authorize(JSON.parse(content), listMajors);
 
+                setTimeout(function(){ postIBMJobs(); }, 30000);
 
 
             });
@@ -170,45 +171,50 @@ router.post('/', function(req, res) {
                         // rows.map((row) => {
                         //     console.log(`${row[0]}, ${row[4]}`);
                         // });
+                        
 
                     } else {
                         console.log('No data found.');
                     }
 
-                    request.post({
-                        headers: { 'content-type': 'application/x-www-form-urlencoded' },
-                        url: 'https://iam.ng.bluemix.net/identity/token',
-                        body: api_token
-                    }, function(error, response, body) {
-                        token = JSON.parse(body)
-                        // console.log(token.access_token);
-                        var Authorization = "Bearer " + token.access_token
 
-                        j_data = JSON.stringify({
-                            "job_run": {
-                                "configuration": {
-
-                                }
-                            }
-                        })
-
-                        request.post({
-                            headers: { "Content-Type": "application/json", "Authorization": Authorization },
-                            url: s_url,
-                            body: j_data
-                        }, function(error, response, body) {
-
-                            // res.send('A job is run')
-                            message = JSON.parse(body)
-                            console.log(message.metadata)
-                            return response
-
-                        });
-
-                    });
                 });
             }
 
+            function postIBMJobs() {
+                request.post({
+                    headers: { 'content-type': 'application/x-www-form-urlencoded' },
+                    url: 'https://iam.ng.bluemix.net/identity/token',
+                    body: api_token
+                }, function(error, response, body) {
+                    token = JSON.parse(body)
+                    // console.log(token.access_token);
+                    var Authorization = "Bearer " + token.access_token
+
+                    j_data = JSON.stringify({
+                        "job_run": {
+                            "configuration": {
+
+                            }
+                        }
+                    })
+
+                    request.post({
+                        headers: { "Content-Type": "application/json", "Authorization": Authorization },
+                        url: s_url,
+                        body: j_data
+                    }, function(error, response, body) {
+
+                        // res.send('A job is run')
+                        message = JSON.parse(body)
+                        console.log(message.metadata)
+                        res.send(200, res, message)
+                        return response
+
+                    });
+
+                });
+            }
             //create JSON object from 2 dimensional Array
             function arrToObject(arr) {
                 //assuming header

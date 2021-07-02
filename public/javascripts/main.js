@@ -19,6 +19,7 @@ app.controller('myCtrl', function($scope, $http, $interval) {
             url: '/manifest/lastjob'
         }).then(function successCallback(response) {
             last_job = response.data
+            console.log(last_job)
             $scope.last_job_status =last_job['job_run']['state']
             // console.log(last_job)
             // console.log($scope.last_job_status)
@@ -27,7 +28,7 @@ app.controller('myCtrl', function($scope, $http, $interval) {
         });
         // $scope.last_job_status = "This DIV is refreshed " + c + " time.";
         c++;
-    }, 30000);
+    }, 60000);
 
     $http({
         method: 'GET',
@@ -66,6 +67,7 @@ app.controller('myCtrl', function($scope, $http, $interval) {
     // });
 
     $scope.jobid = '';
+    $scope.success = '';
 
     $scope.chooseDate = function() {
 
@@ -87,6 +89,7 @@ app.controller('myCtrl', function($scope, $http, $interval) {
                 data: obj_send
             }).then(function successCallback(response) {
                 console.log(response)
+                $scope.success = response.status
             });
         }
 
