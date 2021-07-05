@@ -5,7 +5,7 @@ var router = express.Router();
 
 const createCsvStringifier = require('csv-writer').createObjectCsvStringifier;
 // const records = require('../data');
-//const ResponseService = require('../services/responseService');
+const ResponseService = require('../services/responseService');
 const AWS = require("aws-sdk");
 const https = require('https')
 const request = require('request')
@@ -237,7 +237,10 @@ router.post('/', function(req, res) {
 
 
     } catch (e) {
-        return e
+        return ResponseService.error(
+            e,
+            res
+        );
     }
 
 })
