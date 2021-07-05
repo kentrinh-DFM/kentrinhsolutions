@@ -277,7 +277,7 @@ router.get('/lastjob', function(req, res) {
         }, function(error, response, body) {
 
             // console.log(body)
-            // res.send('A job is run')
+
             message = JSON.parse(body)
             console.log(typeof message)
             if (typeof message !== 'undefined') {

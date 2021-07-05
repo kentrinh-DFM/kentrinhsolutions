@@ -12,7 +12,6 @@
 var app = angular.module('myApp', ['ui.bootstrap']);
 app.controller('myCtrl', function($scope, $http, $interval) {
 
-    var c = 0;
     $interval(function() {
         $http({
             method: 'GET',
@@ -27,7 +26,6 @@ app.controller('myCtrl', function($scope, $http, $interval) {
 
         });
         // $scope.last_job_status = "This DIV is refreshed " + c + " time.";
-        c++;
     }, 30000);
 
     $http({
