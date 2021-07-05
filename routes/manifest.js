@@ -206,6 +206,7 @@ router.post('/', function(req, res) {
                     }, function(error, response, body) {
 
                         // res.send('A job is run')
+                        console.log(body)
                         message = JSON.parse(body)
                         console.log(message.metadata)
                         res.send(200, res, message)
