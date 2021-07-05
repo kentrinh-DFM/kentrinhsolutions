@@ -246,10 +246,7 @@ router.post('/', function(req, res) {
 
 
     } catch (e) {
-        return ResponseService.error(
-            e,
-            res
-        );
+        res.send(e)
     }
 
 })
