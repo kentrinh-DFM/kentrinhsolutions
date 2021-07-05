@@ -192,7 +192,7 @@ router.post('/', function(req, res) {
                             if (s3Err) throw s3Err;
 
 
-                            res.send("Successfully uploaded data to myBucket/myKey");
+                            console.log("Successfully uploaded data to myBucket/myKey");
 
                             // return new Promise(resolve => {
                             //     setTimeout(() => postIBMJobs(), 20000)
