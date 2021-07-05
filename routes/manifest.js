@@ -282,7 +282,7 @@ router.get('/lastjob', function(req, res) {
             message = JSON.parse(body)
             // console.log(typeof message)
             lastjob = message['results'][0].entity
-            res.send(200)
+            res.send(lastjob)
             // if (typeof message !== 'undefined') {
             //     // lastjob = message['results'][0].entity
             //     // res.send(res)
