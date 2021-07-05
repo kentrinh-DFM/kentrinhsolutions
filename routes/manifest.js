@@ -54,7 +54,7 @@ router.post('/', function(req, res) {
     // res.send(token)
     try {
         if (token === "DeltaIoT@$$et") {
-            res.send(token)
+            // res.send(token)
             // Load client secrets from a local file.
             fs.readFile('credentials.json', (err, content) => {
                 if (err) return console.log('Error loading client secret file:', err);
@@ -88,7 +88,7 @@ router.post('/', function(req, res) {
                         message = JSON.parse(body)
                         console.log(message.metadata)
                         res.send(200, res, message)
-                        return response
+                        // return response
 
                     });
 
