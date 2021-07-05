@@ -12,6 +12,19 @@ const request = require('request')
 
 const dotenv = require('dotenv');
 dotenv.config();
+
+// for google sheets
+const fs = require('fs');
+const readline = require('readline');
+const { google } = require('googleapis');
+
+// If modifying these scopes, delete token.json.
+const SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly'];
+// The file token.json stores the user's access and refresh tokens, and is
+// created automatically when the authorization flow completes for the first
+// time.
+const TOKEN_PATH = 'token.json';
+
 // console.log(`Your port is ${process.env.AWS_BUCKET}`); // 8626
 var api_token = "apikey=OlZ7r3OK-iahNBZkMAzv2C3HVa2Qs4BfOqMXK48V5Lq_&grant_type=urn%3Aibm%3Aparams%3Aoauth%3Agrant-type%3Aapikey"
 
@@ -40,16 +53,6 @@ router.post('/', function(req, res) {
     console.log(token)
     try {
         if (token === "DeltaIoT@$$et") {
-            const fs = require('fs');
-            const readline = require('readline');
-            const { google } = require('googleapis');
-
-            // If modifying these scopes, delete token.json.
-            const SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly'];
-            // The file token.json stores the user's access and refresh tokens, and is
-            // created automatically when the authorization flow completes for the first
-            // time.
-            const TOKEN_PATH = 'token.json';
 
             // Load client secrets from a local file.
             fs.readFile('credentials.json', (err, content) => {
