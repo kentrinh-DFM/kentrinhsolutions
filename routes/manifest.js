@@ -280,12 +280,14 @@ router.get('/lastjob', function(req, res) {
 
             message = JSON.parse(body)
             console.log(typeof message)
-            if (typeof message !== 'undefined') {
-                lastjob = message['results'][0].entity
-                res.send(res)
-            } else {
-                res.send(400)
-            }
+            lastjob = message['results'][0].entity
+            res.send(res)
+            // if (typeof message !== 'undefined') {
+            //     // lastjob = message['results'][0].entity
+            //     // res.send(res)
+            // } else {
+            //     res.send(400)
+            // }
 
 
 
