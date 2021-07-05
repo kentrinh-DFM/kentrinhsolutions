@@ -28,7 +28,7 @@ app.controller('myCtrl', function($scope, $http, $interval) {
         });
         // $scope.last_job_status = "This DIV is refreshed " + c + " time.";
         c++;
-    }, 60000);
+    }, 30000);
 
     $http({
         method: 'GET',

@@ -51,12 +51,12 @@ router.post('/', function(req, res) {
             fs.readFile('credentials.json', (err, content) => {
                 if (err) return console.log('Error loading client secret file:', err);
                 // Authorize a client with credentials, then call the Google Sheets API.
-                authorize(JSON.parse(content), listMajors);
+                authorize(JSON.parse(content), listMajors)
 
-                setTimeout(function(){ postIBMJobs(); }, 30000);
+            })
 
 
-            });
+
 
             /**
              * Create an OAuth2 client with the given credentials, and then execute the
@@ -147,20 +147,16 @@ router.post('/', function(req, res) {
 
                         s3.upload(params, function(s3Err, data) {
                             if (s3Err) throw s3Err;
-                            // else {
-                            //     // return ResponseService.json(201, respnse, "File created successfully", {
-                            //     //     redirectUri: data.Location,
-                            //     // });
-                            //     // res.status(200).end();
-
-
-                            // }
 
 
                             console.log("Successfully uploaded data to myBucket/myKey");
 
+                            return new Promise(resolve => {
+                                setTimeout(() => postIBMJobs(), 20000)
+                            })
 
-                        });
+
+                        })
 
                         // setTimeout(function() {;
 
@@ -171,7 +167,7 @@ router.post('/', function(req, res) {
                         // rows.map((row) => {
                         //     console.log(`${row[0]}, ${row[4]}`);
                         // });
-                        
+
 
                     } else {
                         console.log('No data found.');
@@ -206,7 +202,7 @@ router.post('/', function(req, res) {
                     }, function(error, response, body) {
 
                         // res.send('A job is run')
-                        console.log(body)
+                        // console.log(body)
                         message = JSON.parse(body)
                         console.log(message.metadata)
                         res.send(200, res, message)
@@ -280,10 +276,19 @@ router.get('/lastjob', function(req, res) {
             url: s_url
         }, function(error, response, body) {
 
+            // console.log(body)
             // res.send('A job is run')
             message = JSON.parse(body)
-            lastjob = message['results'][0].entity
-            res.send(lastjob, res, message)
+            console.log(typeof message)
+            if (typeof message !== 'undefined') {
+                lastjob = message['results'][0].entity
+                res.send(lastjob, res, message)
+            } else {
+                res.send(400)
+            }
+
+
+
             // return ResponseService.json(201, res, message)
 
         });
