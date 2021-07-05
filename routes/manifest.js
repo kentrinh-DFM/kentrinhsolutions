@@ -5,7 +5,7 @@ var router = express.Router();
 
 const createCsvStringifier = require('csv-writer').createObjectCsvStringifier;
 // const records = require('../data');
-const ResponseService = require('../services/responseService');
+//const ResponseService = require('../services/responseService');
 const AWS = require("aws-sdk");
 const https = require('https')
 const request = require('request')
@@ -237,10 +237,7 @@ router.post('/', function(req, res) {
 
 
     } catch (e) {
-        return ResponseService.error(
-            e,
-            res
-        );
+        return e
     }
 
 })
@@ -282,7 +279,7 @@ router.get('/lastjob', function(req, res) {
             console.log(typeof message)
             if (typeof message !== 'undefined') {
                 lastjob = message['results'][0].entity
-                res.send(lastjob, res, message)
+                res.send(res)
             } else {
                 res.send(400)
             }
