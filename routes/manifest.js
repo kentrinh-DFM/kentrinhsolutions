@@ -29,6 +29,42 @@ router.get('/', function(req, res, next) {
     res.send('somethinghere');
 });
 
+function postIBMJobs() {
+    request.post({
+        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        url: 'https://iam.ng.bluemix.net/identity/token',
+        body: api_token
+    }, function(error, response, body) {
+        token = JSON.parse(body)
+        // console.log(token.access_token);
+        var Authorization = "Bearer " + token.access_token
+
+        j_data = JSON.stringify({
+            "job_run": {
+                "configuration": {
+
+                }
+            }
+        })
+
+        request.post({
+            headers: { "Content-Type": "application/json", "Authorization": Authorization },
+            url: s_url,
+            body: j_data
+        }, function(error, response, body) {
+
+            // res.send('A job is run')
+            // console.log(body)
+            message = JSON.parse(body)
+            console.log(message.metadata)
+            res.send(200, res, message)
+            return response
+
+        });
+
+    });
+}
+
 
 // POST method route
 router.post('/', function(req, res) {
@@ -179,41 +215,7 @@ router.post('/', function(req, res) {
                 });
             }
 
-            function postIBMJobs() {
-                request.post({
-                    headers: { 'content-type': 'application/x-www-form-urlencoded' },
-                    url: 'https://iam.ng.bluemix.net/identity/token',
-                    body: api_token
-                }, function(error, response, body) {
-                    token = JSON.parse(body)
-                    // console.log(token.access_token);
-                    var Authorization = "Bearer " + token.access_token
 
-                    j_data = JSON.stringify({
-                        "job_run": {
-                            "configuration": {
-
-                            }
-                        }
-                    })
-
-                    request.post({
-                        headers: { "Content-Type": "application/json", "Authorization": Authorization },
-                        url: s_url,
-                        body: j_data
-                    }, function(error, response, body) {
-
-                        // res.send('A job is run')
-                        // console.log(body)
-                        message = JSON.parse(body)
-                        console.log(message.metadata)
-                        res.send(200, res, message)
-                        return response
-
-                    });
-
-                });
-            }
             //create JSON object from 2 dimensional Array
             function arrToObject(arr) {
                 //assuming header
