@@ -151,12 +151,14 @@ router.post('/', function(req, res) {
 
                             console.log("Successfully uploaded data to myBucket/myKey");
 
-                            return new Promise(resolve => {
-                                setTimeout(() => postIBMJobs(), 20000)
-                            })
+                            // return new Promise(resolve => {
+                            //     setTimeout(() => postIBMJobs(), 20000)
+                            // })
 
 
                         })
+
+                        postIBMJobs()
 
                         // setTimeout(function() {;
 
