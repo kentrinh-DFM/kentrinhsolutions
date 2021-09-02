@@ -19,7 +19,7 @@ app.controller('myCtrl', function($scope, $http, $interval) {
         }).then(function successCallback(response) {
             last_job = response.data
             console.log(last_job)
-            $scope.last_job_status =last_job['job_run']['state']
+            $scope.last_job_status = last_job['job_run']['state']
             // console.log(last_job)
             // console.log($scope.last_job_status)
         }, function errorCallback(response) {
@@ -65,6 +65,28 @@ app.controller('myCtrl', function($scope, $http, $interval) {
     // });
 
     $scope.jobid = '';
+    obj_send = {
+        "method": "Add",
+        "params": {
+            "typeName": "Audit",
+            "entity": {
+                "name": "ReportRiskManagement",
+                "comment": "Ran report from 2021-07-19T14:30:00.000Z to 2021-07-20T14:29:59.000Z, View by: Device, Run report by: 0, Hide zero distance rows: Yes, Groups: 4WD - Compass Group CB (ID: b396E); 4WD - Compass Group Curtis Island (ID: b3964); 4WD - Compass Group EQ (ID: b3963); 4WD - Compass Group CB (ID: b34A0); 4WD - Compass Group CB (ID: b3489); Delta EQ (ID: b3B77); Delta CB (ID: b3B76); Compass Group EQ (ID: b3958); Compass Group Curtis Island (ID: b3961); Compass Group CB (ID: b345B), Report template: Advanced Risk Management Report, Type: excel"
+            },
+            "credentials": {
+                "database": "santos",
+                "sessionId": "ugyAfDW-YZkcFVtKUsAHFg",
+                "userName": "kentrinh@compass-group.com.au"
+            }
+        }
+    }
+    $http({
+        method: 'POST',
+        url: "https://securatrak125.geotab.com/apiv1/",
+        data: obj_send
+    }).then(function successCallback(response) {
+        console.log(response)
+    });
 
     $scope.chooseDate = function() {
 
