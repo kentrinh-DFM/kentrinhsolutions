@@ -105,7 +105,8 @@ router.post('/', function(req, res) {
         var token = req.body
         // console.log(token.data)
         name = token.filename.split(".")[0].replace(/\s/g, '')
-        key = search + name + "/" + name + '.csv'
+        key = search + "/" + name + "/" + name + '.csv'
+        console.log(key)
 
         try {
 
