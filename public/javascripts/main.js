@@ -1,126 +1,130 @@
-// $(document).ready(function() {
-//     $('.input-group.date').datepicker({
-//         format: 'dd/mm/yyyy',
-//         todayBtn: true,
-//         todayHighlight: true,
-//         clearBtn: true
-//     });
+var app = angular.module('myApp', []);
+app.controller('myCtrl', ['$scope', '$http', '$window', function($scope, $http, $window) {
+    $scope.SelectedFileForUpload = null;
 
-// });
+    $scope.UploadFile = function(files) {
+        $scope.$apply(function() { //I have used $scope.$apply because I will call this function from File input type control which is not supported 2 way binding
+            $scope.Message = "";
+            $scope.SelectedFileForUpload = files[0];
 
 
-var app = angular.module('myApp', ['ui.bootstrap']);
-app.controller('myCtrl', function($scope, $http, $interval) {
+        })
+    }
 
-    $interval(function() {
+    //Parse Excel Data 
+    $scope.ParseExcelDataAndSave = function() {
+        var file = $scope.SelectedFileForUpload;
+
+
+        if (file) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var data = e.target.result;
+                //XLSX from js-xlsx library , which I will add in page view page
+                var workbook = XLSX.read(data, { type: 'binary' });
+                var sheetName = workbook.SheetNames[0];
+                var excelData = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
+                if (excelData.length > 0) {
+                    var fileinfo = { 'filename': file.name, 'data': excelData }
+                    //Save data 
+                    $scope.SaveData(fileinfo);
+                } else {
+                    $scope.Message = "No data found";
+                }
+            }
+            reader.onerror = function(ex) {
+                console.log(ex);
+            }
+
+            reader.readAsBinaryString(file);
+        }
+    }
+
+    // Save excel data to our database
+    $scope.SaveData = function(fileinfo) {
+        // console.log(fileinfo)
         $http({
-            method: 'GET',
-            url: '/manifest/lastjob'
+            method: "POST",
+            url: "/manifest",
+            data: JSON.stringify(fileinfo),
+            headers: {
+                'Content-Type': 'application/json'
+            }
         }).then(function successCallback(response) {
-            last_job = response.data
-            console.log(last_job)
-            $scope.last_job_status = last_job['job_run']['state']
-            // console.log(last_job)
-            // console.log($scope.last_job_status)
+            console.log("success")
+            $window.location.reload();
         }, function errorCallback(response) {
 
         });
-        // $scope.last_job_status = "This DIV is refreshed " + c + " time.";
-    }, 20000);
+    }
 
     $http({
         method: 'GET',
-        url: '/manifest/lastjob'
+        url: '/manifest/'
     }).then(function successCallback(response) {
-        last_job = response.data
-        $scope.last_job_status = last_job['job_run']['state']
-        // console.log(last_job)
-        // console.log($scope.last_job_status)
+
+        $scope.files = response.data
+
     }, function errorCallback(response) {
 
     });
-    // $http({
-    //     method: 'GET',
-    //     url: '/manifest/date'
-    // }).then(function successCallback(response) {
-    //     // this callback will be called asynchronously
-    //     // when the response is available
-    //     // console.log(response.data)
 
-    //     new_date = moment(response.data, 'DD/MM/YYYY').toDate();
-
-    //     // date_parse = moment(new_date).format('DD/MM/YYYY');
-
-    //     // date_parse = moment($scope.dt).format('DD-MM-YYYY');
-    //     // console.log(new_date)
-    //     $scope.dt = new_date
-
-    // }, function errorCallback(response) {
-    //     console.log("error")
-    //     // called asynchronously if an error occurs
-    //     // or server returns response with an error status.
-
-    //     // $scope.firstName = "John";
-    //     // $scope.lastName = "Doe";
-    // });
-
-    $scope.jobid = '';
-    obj_send = {
-        "method": "Add",
-        "params": {
-            "typeName": "Audit",
-            "entity": {
-                "name": "ReportRiskManagement",
-                "comment": "Ran report from 2021-07-19T14:30:00.000Z to 2021-07-20T14:29:59.000Z, View by: Device, Run report by: 0, Hide zero distance rows: Yes, Groups: 4WD - Compass Group CB (ID: b396E); 4WD - Compass Group Curtis Island (ID: b3964); 4WD - Compass Group EQ (ID: b3963); 4WD - Compass Group CB (ID: b34A0); 4WD - Compass Group CB (ID: b3489); Delta EQ (ID: b3B77); Delta CB (ID: b3B76); Compass Group EQ (ID: b3958); Compass Group Curtis Island (ID: b3961); Compass Group CB (ID: b345B), Report template: Advanced Risk Management Report, Type: excel"
-            },
-            "credentials": {
-                "database": "santos",
-                "sessionId": "ugyAfDW-YZkcFVtKUsAHFg",
-                "userName": "kentrinh@compass-group.com.au"
-            }
-        }
-    }
     $http({
-        method: 'POST',
-        url: "https://securatrak125.geotab.com/apiv1/",
-        data: obj_send
+        method: 'GET',
+        url: '/manifest/user'
     }).then(function successCallback(response) {
-        console.log(response)
+
+
+        $scope.login = response.data;
+
+    }, function errorCallback(response) {
+
     });
 
-    $scope.chooseDate = function() {
+    $scope.Login = function() {
 
-        if (typeof $scope.token !== "undefined") {
-            $scope.last_job_status = "Job is sent"
-            date_parse = moment($scope.dt).format('DD/MM/YYYY');
+        var obj_send = '{ "username" :"' + $scope.username + '",' + '"password" : "' + $scope.password + '"}'
 
-            // var text = '{ "Now" :"' + date_parse + '"}'
-            // var obj = JSON.parse(text);
-
-            var obj_send = '{ "Token" :"' + $scope.token + '"}'
-
-            // obj_send = '{"Token" :"' + $scope.token + '"}'
-            console.log(obj_send)
-            var obj = JSON.parse(obj_send);
-            $http({
-                method: 'POST',
-                url: "/manifest",
-                data: obj_send
-            }).then(function successCallback(response) {
-                console.log(response)
-            });
-        }
-
-        // console.log(obj)
-
-        // $http({
-        //     method: 'POST',
-        //     url: "/manifest",
-        //     data: obj
-        // }).then(function successCallback(response) {
-        //     console.log(response)
-        // });
+        // obj_send = '{"Token" :"' + $scope.token + '"}'
+        // console.log(obj_send)
+        var obj = JSON.parse(obj_send);
+        $http({
+            method: 'POST',
+            url: "/manifest/user",
+            data: obj_send
+        }).then(function successCallback(response) {
+            $scope.login = response.data
+        });
     }
 
+    $scope.Logout = function() {
 
-})
+        console.log("logout")
+        $http({
+            method: 'GET',
+            url: "/manifest/logout",
+        }).then(function successCallback(response) {
+            $window.location.reload();
+        });
+    }
+
+    $scope.DeleteFile = function(file) {
+
+        console.log(file)
+
+        // var obj = JSON.parse(file);
+        $http({
+            method: 'POST',
+            url: "/manifest/removefile",
+            data: file
+        }).then(function successCallback(response) {
+            // $scope.login = response.data
+        });
+        //  $http({
+        //      method: 'GET',
+        //      url: "/manifest/logout",
+        //  }).then(function successCallback(response) {
+        //       $window.location.reload();
+        //  });
+    }
+}])

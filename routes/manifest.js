@@ -1,4 +1,7 @@
 var express = require('express');
+var sessions = require('express-session');
+const cookieParser = require("cookie-parser");
+
 var router = express.Router();
 
 // const csvController = require('../controllers/generateCsv')
@@ -9,6 +12,8 @@ const ResponseService = require('../services/responseService');
 const AWS = require("aws-sdk");
 const https = require('https')
 const request = require('request')
+const _ = require("lodash");
+
 
 const dotenv = require('dotenv');
 dotenv.config();
@@ -17,6 +22,40 @@ dotenv.config();
 const fs = require('fs');
 const readline = require('readline');
 const { google } = require('googleapis');
+
+//Parse json to CSV
+const { parse } = require('json2csv');
+// const opts = {Driver}
+
+// creating 24 hours from milliseconds
+
+
+const oneDay = 1000 * 60 * 60 * 24;
+const fiveminute = 1000 * 5;
+
+
+// FOR LOGIN SESSION 
+//username and password
+const myusername = 'admin'
+const mypassword = 'Compass@123'
+
+// a variable to save a session
+var session;
+
+// parsing the incoming data
+router.use(express.json());
+router.use(express.urlencoded({ extended: true }));
+
+//session middleware
+router.use(sessions({
+    secret: "thisismysecrctekeyfhrgfgrfrty84fwir767",
+    saveUninitialized: true,
+    cookie: { maxAge: fiveminute },
+    resave: false
+}));
+
+// cookie parser middleware
+router.use(cookieParser());
 
 // If modifying these scopes, delete token.json.
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly'];
@@ -28,330 +67,119 @@ const TOKEN_PATH = 'token.json';
 // console.log(`Your port is ${process.env.AWS_BUCKET}`); // 8626
 var api_token = "apikey=OlZ7r3OK-iahNBZkMAzv2C3HVa2Qs4BfOqMXK48V5Lq_&grant_type=urn%3Aibm%3Aparams%3Aoauth%3Agrant-type%3Aapikey"
 
-project_id = "987379fc-57f2-4ca2-93fe-be592e95d826"
-job_id = "1d521767-d208-4c56-aea8-990d90b85689"
-s_url = 'https://api.dataplatform.cloud.ibm.com/v2/jobs/' + job_id + '/runs?project_id=' + project_id
 const s3 = new AWS.S3({
     accessKeyId: process.env.AWS_ACCESS,
     secretAccessKey: process.env.AWS_SECRET,
 });
 
 
-/* GET users listing. */
+/* GET all files listing. */
+var search = "IVMSIncentive"
 router.get('/', function(req, res, next) {
-    res.send('somethinghere');
+    const params = {
+        Bucket: process.env.AWS_BUCKET // pass your bucket name
+    };
+
+    s3.listObjects(params).promise().then(function(data) {
+            // do something with data here
+            var items = data.Contents
+            var IVMSItems = _.filter(items, function(item) {
+                item.Key = _.split(item.Key, "/", 3)
+                // console.log(item.Key)
+                return item.Key.indexOf(search) > -1
+            });
+
+            res.send(IVMSItems)
+
+        })
+        .catch(function(error) {
+            // handle your error here
+        });
+
 });
-
-function postIBMJobs() {
-
-}
 
 
 // POST method route
 router.post('/', function(req, res) {
-    var token = req.body.Token
-    console.log(token)
-    // res.send(token)
-    try {
-        if (token === "DeltaIoT@$$et") {
-            // res.send(token)
-            // Load client secrets from a local file.
-            fs.readFile('credentials.json', (err, content) => {
-                if (err) return console.log('Error loading client secret file:', err);
-                // Authorize a client with credentials, then call the Google Sheets API.
-                authorize(JSON.parse(content), listMajors)
+    if (login) {
+        var token = req.body
+        // console.log(token.data)
+        name = token.filename.split(".")[0].replace(/\s/g, '')
+        key = search + name + "/" + name + '.csv'
 
-                
+        try {
 
+            // const csv = csvStringifier.stringifyRecords(token.data);
+            // console.log(csv)
 
+            const csv = parse(token.data);
+
+            const params = {
+                Bucket: process.env.AWS_BUCKET, // pass your bucket name
+                Key: key, // file will be saved as testBucket/contacts.csv
+                ACL: "public-read",
+                Body: csv,
+                ContentType: "text/csv",
+            };
+
+            s3.upload(params, function(s3Err, data) {
+                if (s3Err) throw s3Err;
+                console.log("Successfully uploaded data to myBucket/myKey");
+                res.send(200)
             })
 
 
-
-
-            /**
-             * Create an OAuth2 client with the given credentials, and then execute the
-             * given callback function.
-             * @param {Object} credentials The authorization client credentials.
-             * @param {function} callback The callback to call with the authorized client.
-             */
-            function authorize(credentials, callback) {
-                const { client_secret, client_id, redirect_uris } = credentials.installed;
-                const oAuth2Client = new google.auth.OAuth2(
-                    client_id, client_secret, redirect_uris[0]);
-
-                // Check if we have previously stored a token.
-                fs.readFile(TOKEN_PATH, (err, token) => {
-                    if (err) return getNewToken(oAuth2Client, callback);
-                    oAuth2Client.setCredentials(JSON.parse(token));
-                    callback(oAuth2Client);
-                });
-            }
-
-            /**
-             * Get and store new token after prompting for user authorization, and then
-             * execute the given callback with the authorized OAuth2 client.
-             * @param {google.auth.OAuth2} oAuth2Client The OAuth2 client to get token for.
-             * @param {getEventsCallback} callback The callback for the authorized client.
-             */
-            function getNewToken(oAuth2Client, callback) {
-                const authUrl = oAuth2Client.generateAuthUrl({
-                    access_type: 'offline',
-                    scope: SCOPES,
-                });
-                console.log('Authorize this app by visiting this url:', authUrl);
-                const rl = readline.createInterface({
-                    input: process.stdin,
-                    output: process.stdout,
-                });
-                rl.question('Enter the code from that page here: ', (code) => {
-                    rl.close();
-                    oAuth2Client.getToken(code, (err, token) => {
-                        if (err) return console.error('Error while trying to retrieve access token', err);
-                        oAuth2Client.setCredentials(token);
-                        // Store the token to disk for later program executions
-                        fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
-                            if (err) return console.error(err);
-                            console.log('Token stored to', TOKEN_PATH);
-                        });
-                        callback(oAuth2Client);
-                    });
-                });
-            }
-
-            /**
-             * Prints the names and majors of students in a sample spreadsheet:
-             * @see https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit
-             * @param {google.auth.OAuth2} auth The authenticated Google OAuth client.
-             */
-            function listMajors(auth) {
-                const sheets = google.sheets({ version: 'v4', auth });
-                sheets.spreadsheets.values.get({
-                    spreadsheetId: '1pSL2d0SvSBuYpui5NIsTukdunt-15gKYvgZZzEjhqgc',
-                    range: 'Sheet1!A:E',
-                }, (err, res) => {
-                    if (err) return console.log('The API returned an error: ' + err);
-                    const rows = res.data.values;
-                    if (rows.length) {
-
-
-                        // console.log(rows[0])
-                        records = arrToObject(rows)
-
-                        const csvStringifier = createCsvStringifier({
-                            header: [{ id: 'Asset Barcode', title: 'Asset Barcode' },
-                                { id: 'From Date', title: 'From Date' },
-                                { id: 'To Date', title: 'To Date' },
-                                { id: 'Scenario', title: 'Scenario' }
-                            ]
-                        });
-
-                        const csv = csvStringifier.stringifyRecords(records);
-                        console.log(csv)
-                        const params = {
-                            Bucket: process.env.AWS_BUCKET, // pass your bucket name
-                            Key: `FM/IoT/AssetMonitoringList/AssetMonitoringList.csv`, // file will be saved as testBucket/contacts.csv
-                            ACL: "public-read",
-                            Body: csv,
-                            ContentType: "text/csv",
-                        };
-
-                        s3.upload(params, function(s3Err, data) {
-                            if (s3Err) throw s3Err;
-
-
-                            console.log("Successfully uploaded data to myBucket/myKey");
-
-                            return new Promise(resolve => {
-                                setTimeout(() => postIBMJobs(), 20000)
-
-                            })
-
-
-                        })
-
-
-                        // setTimeout(function() {;
-
-                        // }, 5000)
-
-                        // console.log('Name, Major:');
-                        // Print columns A and E, which correspond to indices 0 and 4.
-                        // rows.map((row) => {
-                        //     console.log(`${row[0]}, ${row[4]}`);
-                        // });
-
-
-                    } else {
-                        console.log('No data found.');
-                    }
-
-
-                });
-            }
-
-
-            //create JSON object from 2 dimensional Array
-            function arrToObject(arr) {
-                //assuming header
-                var keys = arr[0];
-                //vacate keys from main array
-                var newArr = arr.slice(1, arr.length);
-
-                var formatted = [],
-                    data = newArr,
-                    cols = keys,
-                    l = cols.length;
-                for (var i = 0; i < data.length; i++) {
-                    var d = data[i],
-                        o = {};
-                    for (var j = 0; j < l; j++)
-                        o[cols[j]] = d[j];
-                    formatted.push(o);
-                }
-                return formatted;
-            }
-
-            function postIBMJobs(){
-                request.post({
-                    headers: { 'content-type': 'application/x-www-form-urlencoded' },
-                    url: 'https://iam.ng.bluemix.net/identity/token',
-                    body: api_token
-                }, function(error, response, body) {
-                    token = JSON.parse(body)
-                    // console.log(token.access_token);
-                    var Authorization = "Bearer " + token.access_token
-
-                    j_data = JSON.stringify({
-                        "job_run": {
-                            "configuration": {
-
-                            }
-                        }
-                    })
-
-                    request.post({
-                        headers: { "Content-Type": "application/json", "Authorization": Authorization },
-                        url: s_url,
-                        body: j_data
-                    }, function(error, response, body) {
-
-                        // res.send('A job is run')
-                        // console.log(body)
-                        message = JSON.parse(body)
-                        console.log(message.metadata)
-                        // res.send(200, res, message)
-                        // return response
-
-                    });
-
-                });
-            }
+        } catch (e) {
+            res.send(e)
         }
-
-
-
-    } catch (e) {
-        res.send(e)
     }
+
 
 })
 
-// get method route
-router.get('/date', function(req, res) {
 
+
+var login = false;
+router.post('/user', (req, res) => {
+    console.log(res.body)
+    if (req.body.username == myusername && req.body.password == mypassword) {
+        session = req.session;
+        session.userid = req.body.username;
+        login = true;
+        res.send(login);
+    } else {
+        res.send('Invalid username or password');
+    }
+})
+
+router.get('/user', (req, res) => {
+    res.send(login)
+
+})
+
+
+router.get('/logout', (req, res) => {
+    login = false;
+    res.send("logout")
+});
+
+
+// get method route
+router.post('/removefile', function(req, res) {
+    // console.log(req.body)
+    keyarr = req.body.Key
+    key = keyarr[0] + "\\" + keyarr[1] + "\\" + keyarr[2]
+    console.log(key)
     const params = {
         Bucket: process.env.AWS_BUCKET, // pass your bucket name
-        Key: `chosen_time.csv` // file will be saved as testBucket/contacts.csv
+        Key: key // file will be saved as testBucket/contacts.csv
     };
 
-    s3.getObject(params, function(err, data) {
+    s3.deleteObject(params, function(err, data) {
         if (err) console.log(err);
         else res.send(data.Body.toString()); // successful response
     });
 
 })
-
-// get method route
-router.get('/lastjob', function(req, res) {
-    request.post({
-        headers: { 'content-type': 'application/x-www-form-urlencoded' },
-        url: 'https://iam.ng.bluemix.net/identity/token',
-        body: api_token
-    }, function(error, response, body) {
-        token = JSON.parse(body)
-        // console.log(token.access_token);
-        var Authorization = "Bearer " + token.access_token
-
-        request.get({
-            headers: { "Content-Type": "application/json", "Authorization": Authorization },
-            url: s_url
-        }, function(error, response, body) {
-
-            // console.log(body)
-
-            if (error) throw error;
-            message = JSON.parse(body)
-            // console.log(typeof message)
-            lastjob = message['results'][0].entity
-            res.send(lastjob)
-            // if (typeof message !== 'undefined') {
-            //     // lastjob = message['results'][0].entity
-            //     // res.send(res)
-            // } else {
-            //     res.send(400)
-            // }
-
-
-
-            // return ResponseService.json(201, res, message)
-
-        });
-
-    });
-
-})
-
-
-// get method route
-router.get('/getJobsStatus/:id', function(req, res) {
-
-    run_id = req.params.id
-    run_url = 'https://api.dataplatform.cloud.ibm.com/v2/jobs/' + job_id + '/runs/' + run_id + '?project_id=' + project_id
-    console.log(req.params.id)
-    request.post({
-        headers: { 'content-type': 'application/x-www-form-urlencoded' },
-        url: 'https://iam.ng.bluemix.net/identity/token',
-        body: data
-    }, function(error, response, body) {
-        token = JSON.parse(body)
-        // console.log(token.access_token);
-        var Authorization = "Bearer " + token.access_token
-
-        j_data = JSON.stringify({
-            "job_run": {
-                "configuration": {
-
-                }
-            }
-        })
-
-        request.get({
-            headers: { "Content-Type": "application/json", "Authorization": Authorization },
-            url: run_url,
-        }, function(error, response, body) {
-
-            // res.send('A job is run')
-            message = JSON.parse(body)
-            console.log(message.metadata)
-            // return ResponseService.json(201, res, message)
-            res.send(201, res, message)
-
-        });
-
-    });
-
-})
-
 
 module.exports = router;

@@ -2,74 +2,87 @@
 <html>
 
 <head>
-    <title>IoT Asset Monitoring</title>
+    <title>IVMS Upload Files</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-animate.js"></script>
-    <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-1.0.0.js"></script>
-    <script src="https://momentjs.com/downloads/moment.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.1/xlsx.full.min.js"></script>
+    <script src="https://use.fontawesome.com/333ecd4698.js"></script>
     <script src="/javascripts/main.js"></script>
     <link rel='stylesheet' href='/stylesheets/style.css' />
 </head>
-<!-- <body>
-    <h1>
-        <%= title %>
-    </h1>
-    <p>Welcome to
-        <%= title %>
-    </p>
-   <input class="datepicker" data-date-format="mm/dd/yyyy">
-   <div class="input-group date" data-provide="datepicker">
-    <input type="text" class="form-control">
-    <div class="input-group-addon">
-        <span class="glyphicon glyphicon-th"></span>
-    </div>
-</div>
-</body> -->
 
 <body>
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" href="#">DeltaFM</a>
+                <a class="navbar-brand" href="#">CGA</a>
             </div>
         </div>
     </nav>
     <div class="container">
         <div ng-app="myApp" ng-controller="myCtrl">
-            <!--             <div class="col-md-6">
-                <p class="input-group">
-                    <input type="date" class="form-control" uib-datepicker-popup ng-model="dt" is-open="popup2.opened" min-date="minDate" max-date="maxDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
-                </p>
-            </div> -->
-            <div class="form-row col-md-12" style="margin-bottom: 20px">
-                <form name="myForm">
-                    <!-- <form name="myForm" ng-show="last_job_status=='Completed'"> -->
-                    <h3>IoT Asset Monitoring</h3>
-                    <p>Input token to refresh data</p>
-                    <div class="col-md-3 mb-3">
-                        <label for="validationServer05"></label>
-                        <input type="text" class="form-control is-invalid" id="validationServer05" placeholder="Input Token" ng-model="token" required>
+            <div ng-hide="login">
+                <form>
+                    <h2>Login</h2>
+                    <div class="input-field">
+                        <input type="text" name="username" id="username" placeholder="Enter Username" ng-model="username">
                     </div>
-                    <div class="col-md-3 mb-3">
-                        <!-- <label for="validationServer03"></label> -->
-                        <button type="submit" class="btn btn-primary" ng-click="chooseDate()" id="btnClear">Submit</button>
+                    <div class="input-field">
+                        <input type="password" name="password" id="password" placeholder="Enter Password" ng-model="password">
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-12">
+                            <button type="submit" class="login-button" ng-click="Login()">Sign in</button>
+                        </div>
                     </div>
                 </form>
             </div>
-            <!-- <div style="margin-top: 10px"> -->
-                <!--                 <p ng-show="last_job_status !='Completed'" id="job_status">Job Status: {{last_job_status}}<img src="https://cdn.dribbble.com/users/563824/screenshots/3633228/untitled-5.gif" width="20%" height="20%"></p>
- -->
-                <p id="job_status"  >Last Job Status: {{last_job_status}}<img ng-show="last_job_status !='Completed'" src="https://cdn.dribbble.com/users/563824/screenshots/3633228/untitled-5.gif" width="20%" height="20%"></p>
-            <!-- </div> -->
+            <div ng-show="login">
+                <p>
+                    <h2>Welcome team, <a ng-click="Logout()">logout</a></h2>
+                </p>
+                <p>This tool is to upload 4WD exceptions data for the IVMS Incentive Dashboard</p>
+                <div class="form-row col-md-12" style="margin-bottom: 20px">
+                    <div class="form-inline">
+                        <input type="file" name="file" class="form-control" onchange="angular.element(this).scope().UploadFile(this.files)" />
+                        <input type="button" value="Import" class="btn btn-success" ng-disabled="!SelectedFileForUpload" ng-click="ParseExcelDataAndSave()" />
+                        <br />
+                        <span style="color:red">
+                            {{Message}}
+                        </span>
+                    </div>
+                </div>
+                <div>
+                    <table>
+                        <tr>
+                            <th>File Name</th>
+                            <th>File Size</th>
+                            <th>Date Upload</th>
+                        </tr>
+                        <tr ng-repeat="file in files">
+                            <td ng-repeat="key in file.Key" ng-if="$last">{{key}}</td>
+                            <td>{{ file.Size}}</td>
+                            <td>{{ file.LastModified | date:'dd/MM/yyyy'}}</td>
+<!--                             <td ><i class="fa fa-trash-o fa-sm" ng-click="DeleteFile(file)"></i>
+                                <span class="tooltiptext">Remove file</span></div>
+                            </td> -->
+                        </tr>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </body>
 <!-- Controller -->
+<!-- <script type="text/javascript">
+$(function() {
+    $('[data-toggle="tooltip"]').tooltip()
+})
+</script> -->
 
 </html>
