@@ -1,86 +1,35 @@
-
-table,
-th,
-td {
-    border: 1px solid grey;
-    border-collapse: collapse;
-    padding: 5px;
+.hexagon {
+  float: left;
+  position: relative; top:50px; right:50px; left:20px;
+  width: 150px;
+  height: 150px;
+  background: #ebebeb;
+  box-sizing: border-box;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  background-size :cover ;
+  margin-left: 10px;
+  margin-top: 10px;
 }
 
-table tr:nth-child(odd) {
-    background-color: #f2f2f2;
-}
-
-table tr:nth-child(even) {
-    background-color: #ffffff;
-}
-
-form {
-    display: flex;
-    flex-direction: column;
-}
-
-.input-field {
-    position: relative;
-    margin-top: 2rem;
-}
-
-.input-field input {
-    padding: 0.8rem;
-}
-
-form .input-field:first-child {
-    margin-bottom: 1.5rem;
-}
-
-/*form input[type="submit"] {
-    background: linear-gradient(to left, #4776E6, #8e54e9);
-    color: white;
-    border-radius: 4px;
-    margin-top: 2rem;
-    padding: 0.4rem;
-}*/
-
-.login-button {
-    background: linear-gradient(to left, #4776E6, #8e54e9);
-    color: white;
-    border-radius: 4px;
-    margin-top: 2rem;
-    padding: 0.5rem;
-
-}
-/*
-.fa.fa-trash-o {
-    color: black
-}
-
-.fa.fa-trash-o:hover {
-    color: red;
-}
-
-#tooltip {
-  position: relative;
-  display: inline-block;
-  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
-}
-
-/* Tooltip text */
-.fa.fa-trash-o + .tooltiptext {
-  visibility: hidden;
-  width: 60px;
-  background-color: black;
-  color: #fff;
+.overlay {
+  position: absolute; 
+  bottom: 0; 
+  background: rgb(0, 0, 0);
+  background: rgba(0, 0, 0, 0.5); /* Black see-through */
+  color: #f1f1f1; 
+  width: 100%;
+  transition: .5s ease;
+  opacity:1;
+  color: white;
+  font-size: 20px;
+  padding: 20px;
   text-align: center;
-  padding: 3px 0;
-  border-radius: 6px;
-  font-size: 12px;
- 
-  /* Position the tooltip text - see examples below! */
-  position: absolute;
-  z-index: 1;
 }
 
-/* Show the tooltip text when you mouse over the tooltip container */
-.fa.fa-trash-o:hover + .tooltiptext {
-  visibility: visible;
-}*/
+.row .even {
+	margin-left: 53px;
+}
+.hexagon:hover {
+	  width: 160px;
+  height: 160px;
+}

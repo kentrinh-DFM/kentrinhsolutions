@@ -10,8 +10,6 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-animate.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.1/xlsx.full.min.js"></script>
-    <script src="https://use.fontawesome.com/333ecd4698.js"></script>
     <script src="/javascripts/main.js"></script>
     <link rel='stylesheet' href='/stylesheets/style.css' />
 </head>
@@ -24,58 +22,28 @@
             </div>
         </div>
     </nav>
-    <div class="container">
-        <div ng-app="myApp" ng-controller="myCtrl">
-            <div ng-hide="login">
-                <form>
-                    <h2>Login</h2>
-                    <div class="input-field">
-                        <input type="text" name="username" id="username" placeholder="Enter Username" ng-model="username">
+    <div ng-app="myApp" ng-controller="myCtrl">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-10">
+                    <div class="hexagon">
+                        <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Paris" class="overlay">
                     </div>
-                    <div class="input-field">
-                        <input type="password" name="password" id="password" placeholder="Enter Password" ng-model="password">
+                    <div class="hexagon">
+                        <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Paris" class="overlay">
                     </div>
-                    <div class="form-group row">
-                        <div class="col-md-12">
-                            <button type="submit" class="login-button" ng-click="Login()">Sign in</button>
-                        </div>
+                    <div class="hexagon">
+                        <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Paris" class="overlay">
                     </div>
-                </form>
-            </div>
-            <div ng-show="login">
-                <p>
-                    <h2>Welcome team, <a ng-click="Logout()">logout</a></h2>
-                </p>
-                <p>This tool is to upload 4WD exceptions data for the IVMS Incentive Dashboard</p>
-                <div class="form-row col-md-12" style="margin-bottom: 20px">
-                    <div class="form-inline">
-                        <input type="file" name="file" class="form-control" onchange="angular.element(this).scope().UploadFile(this.files)" />
-                        <input type="button" value="Import" class="btn btn-success" ng-disabled="!SelectedFileForUpload" ng-click="ParseExcelDataAndSave()" />
-                        <br />
-                        <span style="color:red">
-                            {{Message}}
-                        </span>
+                    <div class="hexagon">
+                        <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Paris" class="overlay">
                     </div>
                 </div>
-                <div>
-                    <table>
-                        <tr>
-                            <th>File Name</th>
-                            <th>File Size</th>
-                            <th>Date Upload</th>
-                        </tr>
-                        <tr ng-repeat="file in files">
-                            <td ng-repeat="key in file.Key" ng-if="$last">{{key}}</td>
-                            <td>{{ file.Size}}</td>
-                            <td>{{ file.LastModified | date:'dd/MM/yyyy'}}</td>
-<!--                             <td ><i class="fa fa-trash-o fa-sm" ng-click="DeleteFile(file)"></i>
-                                <span class="tooltiptext">Remove file</span></div>
-                            </td> -->
-                        </tr>
-                    </table>
-                </div>
+                <div class="col-md-1"></div>
             </div>
         </div>
+    </div>
     </div>
 </body>
 <!-- Controller -->
