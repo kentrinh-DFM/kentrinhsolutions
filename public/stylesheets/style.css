@@ -1,35 +1,190 @@
-.hexagon {
-  float: left;
-  position: relative; top:50px; right:50px; left:20px;
-  width: 150px;
-  height: 150px;
-  background: #ebebeb;
-  box-sizing: border-box;
-  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-  background-size :cover ;
-  margin-left: 10px;
-  margin-top: 10px;
+/*.nav-pills > .active > a,
+.nav-pills > .active > a:hover,.nav-pills > li > a:hover {
+text-decoration: none;
+font-weight: bold;
+border-radius:0px;
+border-bottom-width: 4px;
+border-bottom-style: solid;
+border-bottom-color: #FF6600;
+    color: #000 !important;
+  background-color: transparent !important;
+}
+.nav-pills > li > a{
+    border-radius:0px;
+}*/
+
+.active {
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 0px;
+    border-bottom-width: 4px;
+    border-bottom-style: solid;
+    border-bottom-color: #FF6600;
+    color: #000 !important;
+    background-color: transparent !important;
 }
 
-.overlay {
-  position: absolute; 
-  bottom: 0; 
-  background: rgb(0, 0, 0);
-  background: rgba(0, 0, 0, 0.5); /* Black see-through */
-  color: #f1f1f1; 
-  width: 100%;
-  transition: .5s ease;
-  opacity:1;
-  color: white;
-  font-size: 20px;
-  padding: 20px;
-  text-align: center;
+body {
+    margin-top: 3%;
+    /*background-color: #858585;*/
+    font-family: "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
 }
 
-.row .even {
-	margin-left: 53px;
+
+
+.sphere {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    position: relative;
+    
+    border-radius: 50%;
+    transition: background-color 800ms ease-in-out;
+    
+    transition: width 800ms, height 800ms, border-radius 800ms, left 800ms, top 800ms;
+    -moz-transition: width 800ms, height 800ms, border-radius 800ms, left 800ms, top 800ms;
+    -ms-transition: width 800ms, height 800ms, border-radius 800ms, left 800ms, top 800ms;
+    -o-transition: width 800ms, height 800ms, border-radius 800ms, left 800ms, top 800ms;
+    -webkit-transition: width 800ms, height 800ms, border-radius 800ms, left 800ms, top 800ms;
+      top: 100%;
+  /*width: 100%;*/
+
 }
-.hexagon:hover {
-	  width: 160px;
-  height: 160px;
+
+.sphere:hover {
+    transition: background-color 800ms ease-in-out;
+    background: rgb(115, 166, 183);
+    color: #ffffff;
+    z-index: 999;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    -ms-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;
+    width: 275px;
+    height: 275px;
+}
+
+:root {
+    --spheremargin: 20px;
+    --spheremargin-two: --spheremargin + 20px;
+    /* calculate height to preserve a 4:3 aspect ratio */
+}
+
+.one {
+    margin-left: 20px;
+    margin-top: 20px;
+    border: 2px #4285F4 solid;
+    background: rgba(66 ,133 ,244, .2);
+}
+
+.two {
+    margin-left: 20px;
+    margin-top: -100px;
+    border: 2px #DB4437 solid;
+    background: rgba(219, 68, 55, .2);
+}
+
+.three {
+    margin-left: 150px;
+    margin-top: -300px;
+    border: 2px #F4B400 solid;
+    background: rgba(244, 180 ,0, .2);
+}
+
+.four {
+    margin-left: 150px;
+    margin-top: -100px;
+    border: 2px #0F9D58 solid;
+    background: rgba(15 ,157, 88, .2);
+}
+
+.coding {
+    top: 25px;
+    left: 25px;
+}
+
+.stat {
+    top: 115px;
+    left: 10px;
+}
+
+.vis {
+    top: 25px;
+    left: 80px;
+}
+
+.dom {
+    top: 115px;
+    left: 80px;
+}
+
+.text {
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    -ms-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;
+    position: relative;
+    color:#5a5a5a  ;
+/*    top: 75px;
+    left: 65px;*/
+}
+
+.sphere:hover .text {
+    top: 20px;
+    left: 70px;
+}
+
+.sphere:hover .muscles {
+    top: 20px;
+    left: 82px;
+}
+
+.blurb {
+    margin: 2.5em;
+    color: rgba(255, 255, 255, 0);
+    -ms-transform: scale(.9);
+    -webkit-transform: scale(.9);
+    transform: scale(.9);
+    visibility: hidden;
+}
+
+.sphere:hover .blurb {
+    -webkit-transition: all 2s ease-in-out;
+    -moz-transition: all 2s ease-in-out;
+    -o-transition: all 2s ease-in-out;
+    -ms-transition: all 2s ease-in-out;
+    transition: all 2s ease-in-out;
+    color: rgba(255, 255, 255, 1);
+    visibility: visible;
+}
+
+.muscles {
+    top: 70px;
+    left: 20px;
+}
+
+.title {
+    position: relative;
+    top: 65px;
+    left: 55px;
+}
+
+.description {
+    position: relative;
+    top: 65px;
+    left: 25px;
+}
+
+.container {
+    /*margin-left: 350px;*/
+    /*position: absolute;*/
+    padding-left: 50px;
+    padding-bottom: 50px;
+    border-left: 1px solid #FF6600;
+    border-bottom: 1px solid #FF6600;
+    background-color: #F5F5F5;
+    /*background-color: white*/
+
 }
