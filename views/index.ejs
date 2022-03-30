@@ -72,15 +72,15 @@
                     <p class="blurb">Facility Maintenance, Mining, Pharmaceutical, Flight Services, Finance, Project Management, Mobile Plants, Audit.</p>
                 </div>
             </div>
-            <div ng-show="selected=='porfolio'">
-                <div class="col-md-3">
-                    <div class="card" style="width: 10rem;">
-                        <img src="..." class="card-img-top">
-                        <div class="card-body">
-                            <h5 class="card-title">Card title</h5>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                            <a href="#" class="btn btn-primary">Go somewhere</a>
-                        </div>
+            <div ng-show="selected=='portfolio'">
+                <p></p>
+                <div class="row">
+                    <div class="col-md-3"  ng-repeat="p in works">
+                        <iframe width="100%"  ng-src="{{p.src}}" ></iframe>
+
+                        <div class="card-title">{{p.title}}</div>
+                        <p class="card-text">{{p.text}}</p>
+                       
                     </div>
                 </div>
             </div>
