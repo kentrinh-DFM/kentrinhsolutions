@@ -39,7 +39,7 @@ app.controller('myCtrl', ['$scope', '$http', '$window', function($scope, $http, 
     },
     {
         title: 'Tableau Services Analytics Dashboard',
-        src: '//www.youtube.com/embed/R3mth4vsl44',
+        src: '//www.youtube.com/embed/FARPR9DGBGQ',
         text: 'End-to-end services analysis reporting.'
     }
 
