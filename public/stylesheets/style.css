@@ -191,6 +191,7 @@ body {
 .card-title {
   font-family: "Roboto","Arial",sans-serif;
   margin-top: 5px;
+  margin-bottom: 0px;
   font-size: 1rem;
   text-align: center;
 }
@@ -203,6 +204,7 @@ body {
   margin-left: 5px;
   font-size: 12px;
   color: #A6A6A6;
+  text-align: center;
 }
 /*.card:hover {
     -webkit-transition: all 2s ease-in-out;
