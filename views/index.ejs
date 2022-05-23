@@ -31,58 +31,12 @@
         </div>
     </nav> -->
     <div ng-app="myApp" ng-controller="myCtrl">
+
+        Test
         <!--         <div class="book">
         </div> -->
         <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="navbar-header">
-                        <p style="display:inline;"><img src="images/logo.png" class="img-fluid" alt="Responsive image" width="400" height="500" align="left">
-                        </p>
-                    </div>
-                    <!--       <img src="images/logo.png" class="img-fluid" alt="Responsive image" width="50" height="60">
-                    <h1>Ken Porfolio</h1> -->
-                </div>
-                <div class='navbar navbar-expand-lg'>
-                    <ul class="navbar-nav mr-auto">
-                        <li ng-repeat='item in menu' ng-class="{'active': item.id == selected}" ng-click="go(item)">
-                            <a class="nav-link" style="cursor: pointer;">{{item.id}}</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div ng-show="selected=='about'">
-                <p>Ken is an <b>data practisioner</b> who aims to utilitise his expertise to <b>maximise</b> his clients' current decision-making <b>potential</b>.
-                <div class="sphere one">
-                    <span class="text coding">Technology</span>
-                    <p class="blurb">Python, SQL, Tableau, PowerBI, Spotfire, Javascript, AWS S3, AWS Athena, Advance Excel, R, SAS JMP. </p>
-                </div>
-                <div class="sphere two">
-                    <span class="text stat">Applied
-                        Statistics</span>
-                    <p class="blurb">Quantitative methods, correlation, regression, control chart.</p>
-                </div>
-                <div class="sphere three">
-                    <span class="text vis">Visualisation</span>
-                    <p class="blurb">Visualisation best practice to ensure high quality in both aesthetic and meaningful aspects</p>
-                </div>
-                <div class="sphere four">
-                    <span class="text dom">Domain</span>
-                    <p class="blurb">Mining, Pharmaceutical, Train/Rail, Finance, Marketing, Project Management</p>
-                </div>
-            </div>
-            <div ng-show="selected=='portfolio'">
-                <p></p>
-                <div class="row">
-                    <div class="col-md-3"  ng-repeat="p in works">
-                        <iframe width="100%"  ng-src="{{p.src}}" allowfullscreen></iframe>
 
-                        <div class="card-title">{{p.title}}</div>
-                        <p class="card-text">{{p.text}}</p>
-                       
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </body>
